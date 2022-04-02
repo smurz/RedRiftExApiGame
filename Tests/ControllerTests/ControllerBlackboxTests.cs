@@ -41,7 +41,8 @@ namespace Tests.ControllerTests
         public void CreateLobbyByName(string name)
         {
             var createLobbyController = new CreateLobbyController(_lobbiesHost, _playerNameValidator);
-            var result = createLobbyController.CreateLobbyByPlayerName(name);
+            var createParameters = new CreateLobbyParameters() { PlayerName = name };
+            var result = createLobbyController.CreateLobbyByPlayerName(createParameters);
 
             Assert.AreEqual(result.Value.CurrentGame.PlayerHost.Name, name);
         }
@@ -52,7 +53,8 @@ namespace Tests.ControllerTests
         public void CreateLobbyByNameGetsAddedToLobbies(string name)
         {
             var createLobbyController = new CreateLobbyController(_lobbiesHost, _playerNameValidator);
-            var result = createLobbyController.CreateLobbyByPlayerName(name);
+            var createParameters = new CreateLobbyParameters() { PlayerName = name };
+            var result = createLobbyController.CreateLobbyByPlayerName(createParameters);
             var id = result.Value.Id;
 
             var findFlag = _lobbiesHost.Lobbies.TryGetValue(id, out _);
@@ -63,7 +65,8 @@ namespace Tests.ControllerTests
         public async Task GameStateControllerReturnsCorrectLobbyStateWhileWaiting(string name)
         {
             var createLobbyController = new CreateLobbyController(_lobbiesHost, _playerNameValidator);
-            var result = createLobbyController.CreateLobbyByPlayerName(name);
+            var createParameters = new CreateLobbyParameters() { PlayerName = name };
+            var result = createLobbyController.CreateLobbyByPlayerName(createParameters);
             var id = result.Value.Id;
 
             //db context is injected into the controller with Scoped stated and limited lifetime
@@ -80,7 +83,8 @@ namespace Tests.ControllerTests
         public async Task GameStateControllerReturnsCorrectLobbyStateWhenSecondPlayerJoins(string name)
         {
             var createLobbyController = new CreateLobbyController(_lobbiesHost, _playerNameValidator);
-            var result = createLobbyController.CreateLobbyByPlayerName(name);
+            var createParameters = new CreateLobbyParameters() { PlayerName = name };
+            var result = createLobbyController.CreateLobbyByPlayerName(createParameters);
             var id = result.Value.Id;
 
             var joinLobbyController = new JoinLobbyController(_lobbiesHost, _playerNameValidator, _idValidator);
@@ -107,7 +111,8 @@ namespace Tests.ControllerTests
         public async Task ThirdPlayerCannotJoin(string name)
         {
             var createLobbyController = new CreateLobbyController(_lobbiesHost, _playerNameValidator);
-            var result = createLobbyController.CreateLobbyByPlayerName(name);
+            var createParameters = new CreateLobbyParameters() { PlayerName = name };
+            var result = createLobbyController.CreateLobbyByPlayerName(createParameters);
             var id = result.Value.Id;
 
             var joinLobbyController = new JoinLobbyController(_lobbiesHost, _playerNameValidator, _idValidator);
@@ -134,7 +139,8 @@ namespace Tests.ControllerTests
         public async Task GameRunsAtLeast3Seconds(string name)
         {
             var createLobbyController = new CreateLobbyController(_lobbiesHost, _playerNameValidator);
-            var result = createLobbyController.CreateLobbyByPlayerName(name);
+            var createParameters = new CreateLobbyParameters() { PlayerName = name };
+            var result = createLobbyController.CreateLobbyByPlayerName(createParameters);
             var id = result.Value.Id;
 
             var joinLobbyController = new JoinLobbyController(_lobbiesHost, _playerNameValidator, _idValidator);

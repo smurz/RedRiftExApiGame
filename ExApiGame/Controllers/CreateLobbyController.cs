@@ -28,11 +28,11 @@ namespace ExApiGame.Controllers
 
         // POST api/create_lobby/
         [HttpPost]
-        public ActionResult<LobbyDto> CreateLobbyByPlayerName([FromBody] string playerName)
+        public ActionResult<LobbyDto> CreateLobbyByPlayerName([FromBody] CreateLobbyParameters createLobbyParameters)
         {
-            if (!_playerNameValidator.ValidatePlayerName(playerName)) return BadRequest(ErrorMessage);
+            if (!_playerNameValidator.ValidatePlayerName(createLobbyParameters.PlayerName)) return BadRequest(ErrorMessage);
 
-            var playerHost = new SimplePlayer(playerName);
+            var playerHost = new SimplePlayer(createLobbyParameters.PlayerName);
             var lobby = _lobbiesHost.CreateLobby(playerHost);
 
             var dto = new LobbyDto(lobby);
