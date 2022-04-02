@@ -9,14 +9,16 @@ namespace GameLogic
     {
         //game tick time is set explicitly for testing purposes
 
-        public Lobby(IPlayer playerHost, TimeSpan tickTime)
+        public Lobby(
+            IPlayer playerHost, 
+            TimeSpan tickTime)
         {
             PlayerHost = playerHost ?? throw new ArgumentNullException(nameof(playerHost), "Host player can not be null");
             Id = Guid.NewGuid().ToString();
             GameTick = tickTime;
         }
 
-        public event EventHandler<string>? GameOver;
+        public event GameOverHandler? GameOver;
         public string Id { get; }
         public IGame? Game { get; private set; }
         public IPlayer? PlayerHost { get; }
@@ -37,39 +39,17 @@ namespace GameLogic
 
         }
 
-        //should use reactive pipeline, commands and observable error handling instead of events.
-        private async Task HandleGameStateChangedAsync(GameState e)
+        private void HandleGameStateChangedAsync(object? sender, GameState gameState)
         {
-            if (e == GameState.GameOver)
+            if (gameState == GameState.GameOver)
             {
-                try
-                {
-                    // instantiate short life db connection to write game result
-                    await using (var dbContext = new GameResultContext())
-                    {
-                        var gameResult = new GameResult()
-                        {
-                            Id = Id,
-                            PlayerHostName = PlayerHost.Name,
-                            PlayerHostHealth = PlayerHost.PlayerHealth,
-                            PlayerGuestName = PlayerGuest.Name,
-                            PlayerGuestHealth = PlayerGuest.PlayerHealth
-                        };
-
-                        dbContext.GameResults.Add(gameResult);
-                        await dbContext.SaveChangesAsync().ConfigureAwait(false);
-                    }
-                }
-                finally
-                {
-                    OnGameOver(Id);
-                }
+                OnGameOver();
             }
         }
 
-        protected virtual void OnGameOver(string e)
+        protected virtual void OnGameOver()
         {
-            GameOver?.Invoke(this, e);
+            GameOver?.Invoke(this);
         }
     }
 }

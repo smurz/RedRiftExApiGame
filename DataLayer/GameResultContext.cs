@@ -10,10 +10,6 @@ namespace DataLayer
 {
     public class GameResultContext : DbContext
     {
-        public const string ConnectionString = "GameResultsDb";
-
-        public GameResultContext()
-        {}
 
         public GameResultContext(DbContextOptions<GameResultContext> options)
             : base(options)
@@ -21,9 +17,16 @@ namespace DataLayer
 
         public DbSet<GameResult> GameResults { get; set; } = null!;
 
+#if DEBUG
+        //for tests
+        public GameResultContext()
+        { }
+
+        //for tests
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInMemoryDatabase(ConnectionString);
+            optionsBuilder.UseInMemoryDatabase("GameResultsDb");
         }
+#endif
     }
 }

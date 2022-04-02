@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using DataLayer;
 using ExApiGame.Controllers;
@@ -9,6 +10,8 @@ using ExApiGame.Controllers.Dtos;
 using ExApiGame.Controllers.Validators;
 using GameLogic;
 using GameLogic.Base;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 using NUnit.Framework;
 
 namespace Tests.ControllerTests
@@ -23,7 +26,11 @@ namespace Tests.ControllerTests
         [SetUp]
         public void SetUp()
         {
-            _lobbiesHost = new LobbiesHost();
+            var contextFactoryMock = new Mock<IDbContextFactory<GameResultContext>>();
+            contextFactoryMock.Setup(cf => cf.CreateDbContextAsync(CancellationToken.None))
+                .ReturnsAsync(new GameResultContext());
+
+            _lobbiesHost = new LobbiesHost(contextFactoryMock.Object);
             _playerNameValidator = new PlayerNameValidator();
             _idValidator = new GameIdValidator();
         }

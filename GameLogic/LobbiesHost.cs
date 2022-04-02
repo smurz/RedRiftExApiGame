@@ -2,15 +2,23 @@
 using DataLayer;
 using DataLayer.GameContext;
 using GameLogic.Base;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameLogic
 {
     public class LobbiesHost : ILobbiesHost
     {
+        private readonly IDbContextFactory<GameResultContext> _contextFactory;
         private readonly TimeSpan _defaultGameTick = TimeSpan.FromSeconds(1);
         private readonly ConcurrentDictionary<string, ILobby> _lobbies = new();
 
         public IDictionary<string, ILobby> Lobbies => _lobbies;
+
+        //inject db context
+        public LobbiesHost(IDbContextFactory<GameResultContext> contextFactory)
+        {
+            _contextFactory = contextFactory ?? throw new ArgumentNullException(nameof(contextFactory));
+        }
 
         /// <summary>
         /// Create lobby with single host player.
@@ -46,11 +54,25 @@ namespace GameLogic
             return lobby.TryJoinPlayer(playerGuest);
 
         }
-
-        //remove active lobby from the list on game over
-        private void Lobby_GameOver(object? sender, string e)
+        
+        private async Task Lobby_GameOver(ILobby lobby)
         {
-            _lobbies.TryRemove(e, out _);
+            _lobbies.TryRemove(lobby.Id, out _);
+            // instantiate short life db connection to write game result
+             await using (var dbContext = await _contextFactory.CreateDbContextAsync())
+             {
+                    var gameResult = new GameResult()
+                    {
+                        Id = lobby.Id,
+                        PlayerHostName = lobby.PlayerHost.Name,
+                        PlayerHostHealth = lobby.PlayerHost.PlayerHealth,
+                        PlayerGuestName = lobby.PlayerGuest.Name,
+                        PlayerGuestHealth = lobby.PlayerGuest.PlayerHealth
+                    };
+
+                    dbContext.GameResults.Add(gameResult);
+                    await dbContext.SaveChangesAsync().ConfigureAwait(false);
+             }
         }
     }
 }

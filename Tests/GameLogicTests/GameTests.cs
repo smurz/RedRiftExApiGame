@@ -41,11 +41,10 @@ namespace Tests.GameLogicTests
             var player1 = TestHelperMethods.CreatePlayer();
             var player2 = TestHelperMethods.CreatePlayer();
             var game = new TakeRandomHitGame(player1, player2, TestHelperMethods.GetTimeSpan());
-            game.GameStateChanged += state =>
+            game.GameStateChanged += (sender, state) => 
             {
                 if (state == GameState.Active)
                     eventRaised.Set();
-                return Task.CompletedTask;
             };
             game.Start();
 
@@ -60,12 +59,11 @@ namespace Tests.GameLogicTests
             var player1 = TestHelperMethods.CreatePlayer();
             var player2 = TestHelperMethods.CreatePlayer();
             var game = new TakeRandomHitGame(player1, player2, TestHelperMethods.GetTimeSpan());
-            game.GameStateChanged += state =>
+            game.GameStateChanged += (sender, state) =>
             {
                 if (state != GameState.Active)
                     if(state == GameState.GameOver)
                         eventRaised.Set();
-                return Task.CompletedTask;
             };
             game.Start();
 
@@ -85,7 +83,7 @@ namespace Tests.GameLogicTests
                 var player1 = TestHelperMethods.CreatePlayer();
                 var player2 = TestHelperMethods.CreatePlayer();
                 var game = new TakeRandomHitGame(player1, player2, TestHelperMethods.GetTimeSpan());
-                game.GameStateChanged += state =>
+                game.GameStateChanged += (sender, state) =>
                 {
                     if (state == GameState.GameOver)
                     {
@@ -93,7 +91,6 @@ namespace Tests.GameLogicTests
                             !(player1.PlayerHealth <= 0 && player2.PlayerHealth <= 0))
                             eventRaised.Set();
                     }
-                    return Task.CompletedTask;
                 };
                 game.Start();
 

@@ -50,7 +50,7 @@ namespace GameLogic
             OnGameStateChanged(State);
         }
 
-        public event GameStateChangedHandler? GameStateChanged;
+        public event EventHandler<GameState>? GameStateChanged;
 
         /// <summary>
         /// NO DRAW POSSIBLE
@@ -117,7 +117,7 @@ namespace GameLogic
 
         private void OnGameStateChanged(GameState e)
         {
-            GameStateChanged?.Invoke(e);
+            GameStateChanged?.Invoke(this, e);
         }
     }
 }

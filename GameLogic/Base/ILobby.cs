@@ -7,9 +7,11 @@ using DataLayer.GameContext;
 
 namespace GameLogic.Base
 {
+    public delegate Task GameOverHandler(ILobby lobby);
+
     public interface ILobby
     {
-        event EventHandler<string>? GameOver;
+        event GameOverHandler? GameOver;
 
         string Id { get; }
 

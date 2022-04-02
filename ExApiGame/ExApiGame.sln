@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameLogic", "..\GameLogic\G
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "..\DataLayer\DataLayer.csproj", "{D12D450C-B8CD-472A-A35B-D48DF5F45442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\Tests\Tests.csproj", "{C77C78B6-EB00-43D6-9C1E-094D7051696A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "..\Tests\Tests.csproj", "{C77C78B6-EB00-43D6-9C1E-094D7051696A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,7 +32,6 @@ Global
 		{C77C78B6-EB00-43D6-9C1E-094D7051696A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C77C78B6-EB00-43D6-9C1E-094D7051696A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C77C78B6-EB00-43D6-9C1E-094D7051696A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C77C78B6-EB00-43D6-9C1E-094D7051696A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -59,43 +59,5 @@ namespace Tests.GameLogicTests
 
             Assert.AreEqual(lobby.Game.State, GameState.Active);
         }
-
-        [Test]
-        public async Task GameResultIsWrittenToDbAfterGameOver()
-        {
-            var playerHost = TestHelperMethods.CreatePlayer();
-            var playerGuest = TestHelperMethods.CreatePlayer();
-
-            var lobby = new Lobby(playerHost, TestHelperMethods.GetTimeSpan());
-            var joinSecondResponse = lobby.TryJoinPlayer(playerGuest);
-
-            ManualResetEvent eventRaised = new ManualResetEvent(false);
-            GameResult? find;
-
-            lobby.Game.GameStateChanged += async state =>
-            {
-                if (state == GameState.GameOver)
-                {
-                    //delay to ensure data is written
-                    await Task.Delay(TimeSpan.FromMilliseconds(100));
-                    eventRaised.Set();
-                }
-            };
-
-            var wait = eventRaised.WaitOne(TimeSpan.FromSeconds(50));
-
-            //instantiate db connection to find result
-            await using (var dbContext = new GameResultContext())
-            {
-                find = await dbContext.GameResults.FindAsync(lobby.Id);
-            }
-
-            Assert.IsTrue(
-                wait &&
-                find != null &&
-                find.Id == lobby.Id &&
-                find.PlayerHostName == playerHost.Name &&
-                find.PlayerGuestName == playerGuest.Name);
-        }
     }
 }
