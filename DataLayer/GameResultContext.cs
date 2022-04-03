@@ -25,7 +25,8 @@ namespace DataLayer
         //for tests
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInMemoryDatabase("GameResultsDb");
+            var connectionString = "Host=localhost;Database=ExApiGame;Username=postgres;Password=cvehp1988";
+            optionsBuilder.UseNpgsql(connectionString);
         }
 #endif
     }

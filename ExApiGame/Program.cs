@@ -15,8 +15,8 @@ var defaultConnectionString = builder.Configuration.GetConnectionString("Default
 
 if (builder.Environment.EnvironmentName == "Development")
 {
-    builder.Services.AddDbContextFactory<GameResultContext>(opt => opt.UseInMemoryDatabase("GameResultContextDb"), ServiceLifetime.Transient);
-    builder.Services.AddDbContext<GameResultContext>(opt => opt.UseInMemoryDatabase("GameResultContextDb"), ServiceLifetime.Transient);
+    builder.Services.AddDbContextFactory<GameResultContext>(options => options.UseNpgsql(defaultConnectionString));
+    builder.Services.AddDbContext<GameResultContext>(options => options.UseNpgsql(defaultConnectionString));
 }
 else
 {
