@@ -71,7 +71,7 @@ Use: POST "{\"playerName\": \"player-name\", \"lobbyId\":\"lobby-id\"}"
 Example:
   
 curl -X 'POST' \
-  'https://localhost:44347/api/join-lobby' \
+  'https://redrift-exapi-game.herokuapp.com/api/join-lobby' \
   -H 'accept: text/plain' \
   -H 'Content-Type: application/json' \
   -d '{
